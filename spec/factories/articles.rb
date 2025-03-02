@@ -6,7 +6,7 @@ FactoryBot.define do
     feature_image { Faker::Internet.url }
     uuid { SecureRandom.uuid }
     published_at { Time.current }
-    
+
     trait :with_tags do
       after(:create) do |article|
         article.tags << create(:tag)
