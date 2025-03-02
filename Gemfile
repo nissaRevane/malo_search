@@ -24,3 +24,5 @@ group :development do
   gem "rubocop", require: false
   gem "rubocop-rails-omakase", require: false
 end
+
+gem "dockerfile-rails", ">= 1.7", :group => :development
