@@ -22,3 +22,5 @@ To run the tests: `bundle exec rspec`
 
 `bundle exec rails s`
  Then you can access the app with `http://localhost:3000`
+
+ The app is also available online at `https://malo-search.fly.dev/`
