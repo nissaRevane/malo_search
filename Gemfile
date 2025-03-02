@@ -22,4 +22,5 @@ group :development do
   gem "web-console"
   gem "brakeman", require: false
   gem "rubocop", require: false
+  gem "rubocop-rails-omakase", require: false
 end
