@@ -23,14 +23,75 @@ RSpec.describe "Articles", type: :request do
       article2.tags << tag2
     end
 
-    it "returns the last 3 articles" do
-      get "/"
+    context "when a search query is provided" do
+      it "returns articles matching the query in the title" do
+        get "/articles/search", params: { query: "allaitement" }
 
-      expect(response).to have_http_status(200)
-      expect(response.body).not_to include(article1.title)
-      expect(response.body).to include(article2.title)
-      expect(response.body).to include(article3.title)
-      expect(response.body).to include(article4.title)
+        expect(response).to have_http_status(200)
+        expect(response.body).to include(article1.title)
+        expect(response.body).not_to include(article2.title)
+        expect(response.body).not_to include(article3.title)
+        expect(response.body).not_to include(article4.title)
+      end
+
+      it "returns articles matching the query in the excerpt" do
+        get "/articles/search", params: { query: "routine" }
+
+        expect(response).to have_http_status(200)
+        expect(response.body).to include(article2.title)
+        expect(response.body).not_to include(article1.title)
+        expect(response.body).not_to include(article3.title)
+        expect(response.body).not_to include(article4.title)
+      end
+
+      it "returns articles matching the query in tags" do
+        get "/articles/search", params: { query: "sommeil" }
+
+        expect(response).to have_http_status(200)
+        expect(response.body).to include(article2.title)
+        expect(response.body).not_to include(article1.title)
+        expect(response.body).not_to include(article3.title)
+        expect(response.body).not_to include(article4.title)
+      end
+
+      it "returns articles with similar words using trigram search" do
+        get "/articles/search", params: { query: "alaitment" }
+
+        expect(response).to have_http_status(200)
+        expect(response.body).to include(article1.title)
+      end
+
+      it "returns empty results when no matches found" do
+        get "/articles/search", params: { query: "vacances" }
+
+        expect(response).to have_http_status(200)
+        expect(response.body).not_to include(article1.title)
+        expect(response.body).not_to include(article2.title)
+        expect(response.body).not_to include(article3.title)
+        expect(response.body).not_to include(article4.title)
+      end
+    end
+
+    context "when no search query is provided" do
+      it "returns the last 3 articles" do
+        get "/articles/search"
+
+        expect(response).to have_http_status(200)
+        expect(response.body).not_to include(article1.title)
+        expect(response.body).to include(article2.title)
+        expect(response.body).to include(article3.title)
+        expect(response.body).to include(article4.title)
+      end
+
+      it "returns the last 3 articles when query is empty" do
+        get "/articles/search", params: { query: "" }
+
+        expect(response).to have_http_status(200)
+        expect(response.body).not_to include(article1.title)
+        expect(response.body).to include(article2.title)
+        expect(response.body).to include(article3.title)
+        expect(response.body).to include(article4.title)
+      end
     end
   end
 end

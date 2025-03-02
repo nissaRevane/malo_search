@@ -1,13 +1,35 @@
 <div class="search-container">
   <h1 class="search-title">Recherche d'articles</h1>
   
-  <div class="results-count">Nos 3 derniers articles</div>
+  <%= form_with url: search_articles_path, method: :get, class: "search-form" do |form| %>
+    <div class="search-input">
+      <%=
+        form.text_field :query,
+        value: params[:query],
+        placeholder: "Grossesse, diversification, allaitement...",
+        class: "search-field"
+      %>
+      <%= form.submit "Rechercher", class: "search-button" %>
+    </div>
+  <% end %>
+  
+  <div class="results-count">
+    <% if params[:query].present? %>
+      <p>Recherche de <%= @articles.count %> résultats pour "<%= params[:query] %>"</p>
+    <% else %>
+      <p>Nos 3 derniers articles</p>
+    <% end %>
+  </div>
   
   <div class="articles-grid"><% @articles.each do |article| %>
     <div class="article-card">
       <% if article.feature_image.present? %>
         <div class="article-image">
-          <%= image_tag(article.feature_image) %>
+          <%= image_tag(
+              article.feature_image,
+              onerror: "this.onerror=null; this.src='https://heloa.app/wp-content/uploads/2024/07/cropped-malo-app-icon-1.png'"
+            )
+          %>
         </div>
       <% end %>
       
